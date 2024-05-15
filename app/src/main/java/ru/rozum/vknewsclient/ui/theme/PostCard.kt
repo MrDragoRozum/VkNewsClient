@@ -1,17 +1,24 @@
 package ru.rozum.vknewsclient.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -30,9 +38,6 @@ import ru.rozum.vknewsclient.R
 @Composable
 fun PostCard() {
     Card(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
         shape = RoundedCornerShape(2.dp),
         colors = CardDefaults.cardColors(
@@ -49,24 +54,31 @@ fun PostCard() {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.post_comunity_thumbnail),
-                    contentDescription = "",
+                    contentDescription = null,
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
                 )
 
-                Column(Modifier.padding(start = 6.dp)) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Типичный программист", fontSize = 14.sp
+                        text = "Типичный программист",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
-                    Text(text = "14:00", fontSize = 14.sp, color = Color.Gray)
+                    Text(
+                        text = "14:00",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                Image(
-                    painter = painterResource(id = android.R.drawable.ic_menu_more),
-                    contentDescription = "",
+                Icon(
+                    imageVector = Icons.Rounded.MoreVert,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
 
@@ -78,7 +90,7 @@ fun PostCard() {
 
             Image(
                 painter = painterResource(id = R.drawable.post_content_image),
-                contentDescription = "",
+                contentDescription = null,
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop
             )
@@ -102,15 +114,35 @@ fun PostCard() {
             }
         }
     }
+}
 
-
+@Composable
+@Preview
+fun PreviewCardLight() {
+    VkNewsClientTheme(darkTheme = false) {
+//        Box(
+//            modifier = Modifier
+//                .background(MaterialTheme.colorScheme.background)
+//                .fillMaxSize()
+//                .padding(8.dp)
+//        ) {
+            PostCard()
+//        }
+    }
 }
 
 @Composable
 @Preview
 fun PreviewCardDark() {
-    VkNewsClientTheme(darkTheme = false) {
-        PostCard()
+    VkNewsClientTheme(darkTheme = true) {
+//        Box(
+//            modifier = Modifier
+//                .background(MaterialTheme.colorScheme.background)
+//                .fillMaxSize()
+//                .padding(8.dp)
+//        ) {
+            PostCard()
+//        }
     }
 }
 
@@ -128,6 +160,6 @@ private fun ButtonBottomPost(
             color = Color.Gray,
             modifier = Modifier.padding(end = 4.dp, start = 4.dp)
         )
-        Image(painter = image, contentDescription = "", modifier = Modifier.size(18.dp))
+        Image(painter = image, contentDescription = null, modifier = Modifier.size(18.dp))
     }
 }
