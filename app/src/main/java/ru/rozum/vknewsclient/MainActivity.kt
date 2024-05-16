@@ -6,12 +6,31 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,39 +47,54 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun Test() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet {
+                    NavigationDrawerItem(
+                        label = { Text(text = "Test") },
+                        selected = true,
+                        onClick = { /*TODO*/ },
+                        icon = { Icon(Icons.Filled.Menu, contentDescription = null) })
+
+                Text(text = "test")
+            }
+        },
     ) {
-        Example3()
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "TopAppBar title")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Filled.Menu, contentDescription = "")
+                        }
+                    }
+                )
+            },
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = { /*TODO*/ },
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        label = { Text(text = "Favorite") })
+                }
+            },
+
+            ) {
+            Text(modifier = Modifier.padding(it), text = "This is scaffold content")
+        }
     }
 }
 
-@Composable
-fun Example1() {
-    OutlinedButton(onClick = { /*TODO*/ }) {
-        Text(text = "Hello World!")
-    }
-}
-
-@Composable
-fun Example2() {
-    TextField(value = "Value", onValueChange = { }, label = { Text(text = "Label") })
-}
-
-@Composable
-fun Example3() {
-    AlertDialog(
-        onDismissRequest = { /*TODO*/ },
-        confirmButton = { Text(text = "Yes", modifier = Modifier.padding(8.dp)) },
-        title = { Text(text = "Are you sure?") },
-        text = { Text(text = "Do you want to delete this file?") },
-        dismissButton = { Text(text = "No", modifier = Modifier.padding(8.dp)) }
-    )
-}
 
 
 
