@@ -35,65 +35,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.rozum.vknewsclient.ui.theme.MainScreen
+import ru.rozum.vknewsclient.ui.theme.VkNewsClientTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Test()
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun Test() {
-
-    ModalNavigationDrawer(
-        drawerContent = {
-            ModalDrawerSheet {
-                    NavigationDrawerItem(
-                        label = { Text(text = "Test") },
-                        selected = true,
-                        onClick = { /*TODO*/ },
-                        icon = { Icon(Icons.Filled.Menu, contentDescription = null) })
-
-                Text(text = "test")
+            VkNewsClientTheme {
+                MainScreen()
             }
-        },
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "TopAppBar title")
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "")
-                        }
-                    }
-                )
-            },
-            bottomBar = {
-                NavigationBar {
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = { /*TODO*/ },
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                        label = { Text(text = "Favorite") })
-                }
-            },
-
-            ) {
-            Text(modifier = Modifier.padding(it), text = "This is scaffold content")
         }
     }
 }
+
 
 
 
