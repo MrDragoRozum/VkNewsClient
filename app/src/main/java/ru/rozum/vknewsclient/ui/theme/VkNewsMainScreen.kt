@@ -1,8 +1,6 @@
 package ru.rozum.vknewsclient.ui.theme
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -12,17 +10,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import ru.rozum.vknewsclient.MainViewModel
+import ru.rozum.vknewsclient.navigation.AppNavGraph
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val selectedNavItem by viewModel.selectedNavItem.observeAsState(NavigationItem.Home)
+    val navHostController = rememberNavController()
 
     Scaffold(
         bottomBar = {
@@ -33,10 +33,12 @@ fun MainScreen(viewModel: MainViewModel) {
                     NavigationItem.Favourite,
                     NavigationItem.Profile
                 ).forEach { item ->
+                    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                    val currentRout = navBackStackEntry?.destination?.route
 
                     NavigationBarItem(
-                        selected = item == selectedNavItem,
-                        onClick = { viewModel.selectNavItem(item) },
+                        selected = currentRout == item.screen.route,
+                        onClick = { navHostController.navigate(item.screen.route) },
                         icon = { Icon(item.icon, contentDescription = null) },
                         label = { Text(text = stringResource(id = item.titleResId)) },
                         colors = NavigationBarItemDefaults.colors(
@@ -51,11 +53,17 @@ fun MainScreen(viewModel: MainViewModel) {
             }
         }
     ) { paddingValues ->
-        when (selectedNavItem) {
-            NavigationItem.Home -> HomeScreen(viewModel = viewModel, paddingValues = paddingValues)
-            NavigationItem.Favourite -> TextCounter(name = "Favourite")
-            NavigationItem.Profile -> TextCounter(name = "Profile")
-        }
+
+        AppNavGraph(
+            navHostController = navHostController,
+            homeScreenContent = {
+                HomeScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues
+                )
+            },
+            favouriteScreenContent = { TextCounter(name = "Favourite") },
+            profileScreenContent = { TextCounter(name = "Profile") })
     }
 }
 
