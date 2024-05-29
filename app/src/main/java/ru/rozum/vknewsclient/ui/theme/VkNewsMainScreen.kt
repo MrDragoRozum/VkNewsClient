@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.rozum.vknewsclient.MainViewModel
 import ru.rozum.vknewsclient.navigation.AppNavGraph
+import ru.rozum.vknewsclient.navigation.Screen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
@@ -38,7 +40,15 @@ fun MainScreen(viewModel: MainViewModel) {
 
                     NavigationBarItem(
                         selected = currentRout == item.screen.route,
-                        onClick = { navHostController.navigate(item.screen.route) },
+                        onClick = {
+                            navHostController.navigate(item.screen.route) {
+                                launchSingleTop = true
+                                popUpTo(Screen.NewsFeed.route) {
+                                    saveState = true
+                                }
+                                restoreState = true
+                            }
+                        },
                         icon = { Icon(item.icon, contentDescription = null) },
                         label = { Text(text = stringResource(id = item.titleResId)) },
                         colors = NavigationBarItemDefaults.colors(
@@ -69,7 +79,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
 @Composable
 private fun TextCounter(name: String) {
-    var count by remember {
+    var count by rememberSaveable {
         mutableIntStateOf(0)
     }
 
