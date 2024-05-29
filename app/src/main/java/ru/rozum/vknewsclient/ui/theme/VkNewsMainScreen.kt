@@ -11,20 +11,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import ru.rozum.vknewsclient.MainViewModel
 import ru.rozum.vknewsclient.navigation.AppNavGraph
-import ru.rozum.vknewsclient.navigation.Screen
+import ru.rozum.vknewsclient.navigation.rememberNavigationState
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val navHostController = rememberNavController()
+    val navigationState = rememberNavigationState()
 
     Scaffold(
         bottomBar = {
@@ -35,19 +33,13 @@ fun MainScreen(viewModel: MainViewModel) {
                     NavigationItem.Favourite,
                     NavigationItem.Profile
                 ).forEach { item ->
-                    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                    val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                     val currentRout = navBackStackEntry?.destination?.route
 
                     NavigationBarItem(
                         selected = currentRout == item.screen.route,
                         onClick = {
-                            navHostController.navigate(item.screen.route) {
-                                launchSingleTop = true
-                                popUpTo(Screen.NewsFeed.route) {
-                                    saveState = true
-                                }
-                                restoreState = true
-                            }
+                            navigationState.navigateTo(item.screen.route)
                         },
                         icon = { Icon(item.icon, contentDescription = null) },
                         label = { Text(text = stringResource(id = item.titleResId)) },
@@ -65,7 +57,7 @@ fun MainScreen(viewModel: MainViewModel) {
     ) { paddingValues ->
 
         AppNavGraph(
-            navHostController = navHostController,
+            navHostController = navigationState.navHostController,
             homeScreenContent = {
                 HomeScreen(
                     viewModel = viewModel,
