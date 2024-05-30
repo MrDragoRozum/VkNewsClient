@@ -1,6 +1,5 @@
 package ru.rozum.vknewsclient.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +16,8 @@ private val DarkColorScheme = darkColorScheme(
     secondary = Black900,
     tertiary = Black900,
     onPrimary = Color.White,
-    onSecondary = Black500
+    onSecondary = Black500,
+    background = Black900
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -25,7 +25,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = Color.White,
     tertiary = Color.White,
     onPrimary = Black900,
-    onSecondary = Black500
+    onSecondary = Black500,
+    background = Color.White
 )
 
 @Composable

@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rozum.vknewsclient.MainViewModel
@@ -25,9 +26,12 @@ fun MainScreen(viewModel: MainViewModel) {
     val navigationState = rememberNavigationState()
 
     Scaffold(
-        bottomBar = {
-            NavigationBar {
+        contentColor = MaterialTheme.colorScheme.primary,
 
+        bottomBar = {
+            NavigationBar(
+                containerColor = Color.Unspecified
+            ) {
                 listOf(
                     NavigationItem.Home,
                     NavigationItem.Favourite,
@@ -56,6 +60,7 @@ fun MainScreen(viewModel: MainViewModel) {
         }
     ) { paddingValues ->
 
+
         AppNavGraph(
             navHostController = navigationState.navHostController,
             homeScreenContent = {
@@ -77,7 +82,8 @@ private fun TextCounter(name: String) {
 
     Text(
         modifier = Modifier.clickable { count++ },
-        text = "$name Count: $count"
+        text = "$name Count: $count",
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
 
