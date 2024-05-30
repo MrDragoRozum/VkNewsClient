@@ -1,5 +1,6 @@
 package ru.rozum.vknewsclient.ui.theme
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,11 +26,19 @@ fun HomeScreen(
     val screenState = viewModel.stateScreen.observeAsState(HomeScreenState.Initial)
 
     when (val currentState = screenState.value) {
-        is HomeScreenState.Comments -> CommentScreen(
-            feedPost = currentState.feedPost,
-            modifier = Modifier.padding(paddingValues),
-            comments = currentState.comments
-        )
+        is HomeScreenState.Comments -> {
+            CommentScreen(
+                feedPost = currentState.feedPost,
+                modifier = Modifier.padding(paddingValues),
+                comments = currentState.comments,
+                onBackPressed = {
+                    viewModel.closeComments()
+                }
+            )
+            BackHandler {
+                viewModel.closeComments()
+            }
+        }
 
         is HomeScreenState.Posts -> FeedPosts(paddingValues, currentState.posts, viewModel)
         HomeScreenState.Initial -> {}
@@ -76,8 +85,8 @@ private fun FeedPosts(
                         onShareClickListener = { item ->
                             viewModel.updateCount(index, item)
                         },
-                        onCommentClickListener = { item ->
-                            viewModel.updateCount(index, item)
+                        onCommentClickListener = {
+                            viewModel.showComment(feedPost)
                         },
                         onLikeClickListener = { item ->
                             viewModel.updateCount(index, item)

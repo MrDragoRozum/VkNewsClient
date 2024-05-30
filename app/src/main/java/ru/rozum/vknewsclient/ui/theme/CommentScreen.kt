@@ -36,7 +36,12 @@ import ru.rozum.vknewsclient.domain.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentScreen(feedPost: FeedPost, modifier: Modifier, comments: List<PostComment>) {
+fun CommentScreen(
+    feedPost: FeedPost,
+    modifier: Modifier,
+    comments: List<PostComment>,
+    onBackPressed: () -> Unit
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -51,7 +56,7 @@ fun CommentScreen(feedPost: FeedPost, modifier: Modifier, comments: List<PostCom
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onBackPressed() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 }
