@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.StatisticItem
+import ru.rozum.vknewsclient.ui.theme.HomeScreenState
 
 class MainViewModel : ViewModel() {
 
@@ -14,11 +15,13 @@ class MainViewModel : ViewModel() {
         }
     }.toList()
 
-    private val _feedPosts = MutableLiveData(list)
-    val feedPosts: LiveData<List<FeedPost>> = _feedPosts
+    private val initState = HomeScreenState.Posts(posts = list)
+
+    private val _stateScreen = MutableLiveData<HomeScreenState>(initState)
+    val stateScreen: LiveData<HomeScreenState> = _stateScreen
 
     fun updateCount(postId: Int, item: StatisticItem) {
-        val modifiedList = _feedPosts.getValueNotNull()
+        val modifiedList = _stateScreen.getValueNotNull()
         val oldPost = modifiedList[postId]
 
         val newStatistics = oldPost.statistics.toMutableList().apply {
@@ -31,14 +34,14 @@ class MainViewModel : ViewModel() {
             }
         }
         modifiedList[postId] = oldPost.copy(statistics = newStatistics)
-        _feedPosts.value = modifiedList
+        _stateScreen.value = modifiedList
     }
 
 
     fun removePost(post: FeedPost) {
-        val modifiedList = _feedPosts.getValueNotNull()
+        val modifiedList = _stateScreen.getValueNotNull()
         modifiedList.remove(post)
-        _feedPosts.value = modifiedList
+        _stateScreen.value = modifiedList
     }
 
     private fun LiveData<List<FeedPost>>.getValueNotNull(): MutableList<FeedPost> =
