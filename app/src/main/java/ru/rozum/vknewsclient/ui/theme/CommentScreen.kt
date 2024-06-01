@@ -1,5 +1,6 @@
 package ru.rozum.vknewsclient.ui.theme
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,15 +35,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.rozum.vknewsclient.CommentsViewModel
+import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentScreen(
     modifier: Modifier,
+    feedPost: FeedPost,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel() {
+        CommentsViewModel(feedPost)
+    }
+
     val state = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
     val currentState = state.value
 

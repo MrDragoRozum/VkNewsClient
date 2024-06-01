@@ -80,10 +80,13 @@ fun MainScreen() {
                         }
                     )
                 } else {
-                    CommentScreen(modifier = Modifier.padding(paddingValues)) {
-                        state.value = null
-                    }
-
+                    CommentScreen(
+                        modifier = Modifier.padding(paddingValues),
+                        feedPost = state.value!!,
+                        onBackPressed =  {
+                            state.value = null
+                        }
+                    )
                     BackHandler {
                         state.value = null
                     }

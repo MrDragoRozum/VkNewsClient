@@ -7,24 +7,23 @@ import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.PostComment
 import ru.rozum.vknewsclient.ui.theme.CommentsScreenState
 
-class CommentsViewModel : ViewModel() {
+class CommentsViewModel(feedPost: FeedPost) : ViewModel() {
 
     private val _screenState = MutableLiveData<CommentsScreenState>(CommentsScreenState.Initial)
     val screenState: LiveData<CommentsScreenState> = _screenState
 
     init {
-        showComment(FeedPost())
+        loadComments(feedPost)
     }
 
-    private fun comments() = mutableListOf<PostComment>().apply {
-        repeat(20) {
-            add(
-                PostComment(id = it)
-            )
+    private fun loadComments(feedPost: FeedPost) {
+        val comments = mutableListOf<PostComment>().apply {
+            repeat(20) {
+                add(
+                    PostComment(id = it)
+                )
+            }
         }
-    }
-
-    fun showComment(feedPost: FeedPost) {
-        _screenState.value = CommentsScreenState.Comments(feedPost, comments())
+        _screenState.value = CommentsScreenState.Comments(feedPost, comments)
     }
 }
