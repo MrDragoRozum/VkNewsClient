@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.navigation.AppNavGraph
+import ru.rozum.vknewsclient.navigation.Screen
 import ru.rozum.vknewsclient.navigation.rememberNavigationState
 
 @Composable
@@ -71,25 +72,27 @@ fun MainScreen() {
 
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            homeScreenContent = {
+            newsScreenContent = {
                 if (state.value == null) {
                     HomeScreen(
                         paddingValues = paddingValues,
                         onCommentClickListener = {
                             state.value = it
+                            navigationState.navigateTo(Screen.Comments.route)
                         }
                     )
-                } else {
-                    CommentScreen(
-                        modifier = Modifier.padding(paddingValues),
-                        feedPost = state.value!!,
-                        onBackPressed =  {
-                            state.value = null
-                        }
-                    )
-                    BackHandler {
+                }
+            },
+            commentsScreenContent = {
+                CommentScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    feedPost = state.value!!,
+                    onBackPressed =  {
                         state.value = null
                     }
+                )
+                BackHandler {
+                    state.value = null
                 }
             },
             favouriteScreenContent = { TextCounter(name = "Favourite") },
