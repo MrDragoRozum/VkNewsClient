@@ -1,6 +1,5 @@
 package ru.rozum.vknewsclient.ui.theme
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -21,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.navigation.AppNavGraph
@@ -41,16 +41,20 @@ fun MainScreen() {
             NavigationBar(
                 containerColor = Color.Unspecified
             ) {
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
+
                 listOf(
                     NavigationItem.Home,
                     NavigationItem.Favourite,
                     NavigationItem.Profile
                 ).forEach { item ->
-                    val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-                    val currentRout = navBackStackEntry?.destination?.route
+
+                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } ?: false
 
                     NavigationBarItem(
-                        selected = currentRout == item.screen.route,
+                        selected = selected,
                         onClick = {
                             navigationState.navigateTo(item.screen.route)
                         },
@@ -73,27 +77,22 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
-                if (state.value == null) {
                     HomeScreen(
                         paddingValues = paddingValues,
                         onCommentClickListener = {
                             state.value = it
-                            navigationState.navigateTo(Screen.Comments.route)
+                            navigationState.navigateToComment()
                         }
                     )
-                }
             },
             commentsScreenContent = {
                 CommentScreen(
                     modifier = Modifier.padding(paddingValues),
                     feedPost = state.value!!,
                     onBackPressed =  {
-                        state.value = null
+                        navigationState.navHostController.popBackStack()
                     }
                 )
-                BackHandler {
-                    state.value = null
-                }
             },
             favouriteScreenContent = { TextCounter(name = "Favourite") },
             profileScreenContent = { TextCounter(name = "Profile") })
