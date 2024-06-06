@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.rozum.vknewsclient.CommentsViewModel
 import ru.rozum.vknewsclient.domain.FeedPost
@@ -43,6 +44,7 @@ import ru.rozum.vknewsclient.domain.PostComment
 fun CommentScreen(
     modifier: Modifier,
     feedPost: FeedPost,
+    contentString: String,
     onBackPressed: () -> Unit
 ) {
     val viewModel: CommentsViewModel = viewModel() {
@@ -60,7 +62,8 @@ fun CommentScreen(
                     modifier = Modifier.shadow(elevation = 3.dp),
                     title = {
                         Text(
-                            text = "Comments for FeedPost Id:${currentState.feedPost.id}",
+//                            text = "Comments for FeedPost Id:${currentState.feedPost.id}",
+                            text = contentString,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 18.sp
                         )
