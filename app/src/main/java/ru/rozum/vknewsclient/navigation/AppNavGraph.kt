@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.rozum.vknewsclient.domain.FeedPost
 
 @Composable
 fun AppNavGraph(
@@ -11,7 +12,7 @@ fun AppNavGraph(
     newsScreenContent: @Composable () -> Unit,
     favouriteScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable () -> Unit,
-    commentsScreenContent: @Composable () -> Unit
+    commentsScreenContent: @Composable (FeedPost) -> Unit
 ) {
 
     NavHost(navController = navHostController, startDestination = Screen.Home.route) {

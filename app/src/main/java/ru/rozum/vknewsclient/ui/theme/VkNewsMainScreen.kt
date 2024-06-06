@@ -10,11 +10,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -22,17 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.navigation.AppNavGraph
-import ru.rozum.vknewsclient.navigation.Screen
 import ru.rozum.vknewsclient.navigation.rememberNavigationState
 
 @Composable
 fun MainScreen() {
     val navigationState = rememberNavigationState()
-    val state: MutableState<FeedPost?> = remember {
-        mutableStateOf(null)
-    }
 
     Scaffold(
         contentColor = MaterialTheme.colorScheme.primary,
@@ -77,19 +69,18 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
-                    HomeScreen(
-                        paddingValues = paddingValues,
-                        onCommentClickListener = {
-                            state.value = it
-                            navigationState.navigateToComment()
-                        }
-                    )
+                HomeScreen(
+                    paddingValues = paddingValues,
+                    onCommentClickListener = { feedPost ->
+                        navigationState.navigateToComment(feedPost)
+                    }
+                )
             },
-            commentsScreenContent = {
+            commentsScreenContent = { feedPost ->
                 CommentScreen(
                     modifier = Modifier.padding(paddingValues),
-                    feedPost = state.value!!,
-                    onBackPressed =  {
+                    feedPost = feedPost,
+                    onBackPressed = {
                         navigationState.navHostController.popBackStack()
                     }
                 )
