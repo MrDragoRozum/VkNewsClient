@@ -1,7 +1,6 @@
-package ru.rozum.vknewsclient.ui.theme
+package ru.rozum.vknewsclient.presentation.news
 
 import ru.rozum.vknewsclient.domain.FeedPost
-import ru.rozum.vknewsclient.domain.PostComment
 
 sealed class NewsFeedScreenState {
     data object Initial : NewsFeedScreenState()

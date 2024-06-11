@@ -1,4 +1,4 @@
-package ru.rozum.vknewsclient
+package ru.rozum.vknewsclient.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,9 +8,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vk.api.sdk.VK.getVKAuthActivityResultContract
 import com.vk.api.sdk.auth.VKScope
-import ru.rozum.vknewsclient.ui.theme.AuthState
-import ru.rozum.vknewsclient.ui.theme.LoginScreen
-import ru.rozum.vknewsclient.ui.theme.MainScreen
 import ru.rozum.vknewsclient.ui.theme.VkNewsClientTheme
 
 class MainActivity : ComponentActivity() {

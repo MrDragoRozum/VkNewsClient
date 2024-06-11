@@ -1,7 +1,5 @@
-package ru.rozum.vknewsclient.ui.theme
+package ru.rozum.vknewsclient.samples
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -1,4 +1,4 @@
-package ru.rozum.vknewsclient.ui.theme
+package ru.rozum.vknewsclient.samples
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

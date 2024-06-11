@@ -1,4 +1,4 @@
-package ru.rozum.vknewsclient.ui.theme
+package ru.rozum.vknewsclient.presentation.main
 
 sealed class AuthState {
     data object Initial : AuthState()

@@ -1,8 +1,7 @@
-package ru.rozum.vknewsclient.ui
+package ru.rozum.vknewsclient.presentation.comments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.rozum.vknewsclient.CommentsViewModel
 import ru.rozum.vknewsclient.domain.FeedPost
 
 class CommentsViewModelFactory(
