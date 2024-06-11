@@ -1,22 +1,16 @@
 package ru.rozum.vknewsclient
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import com.vk.api.sdk.VK
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vk.api.sdk.VK.getVKAuthActivityResultContract
-import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
-import ru.rozum.vknewsclient.ui.theme.ActivityResultTest
+import ru.rozum.vknewsclient.ui.theme.AuthState
+import ru.rozum.vknewsclient.ui.theme.LoginScreen
 import ru.rozum.vknewsclient.ui.theme.MainScreen
-import ru.rozum.vknewsclient.ui.theme.MyNumber
-import ru.rozum.vknewsclient.ui.theme.SideEffectTest
 import ru.rozum.vknewsclient.ui.theme.VkNewsClientTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,30 +19,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VkNewsClientTheme {
-                Log.d("MainActivity", "Я вызвался: SideEffect")
+                val viewModel: MainViewModel = viewModel()
+                val authState = viewModel.authState.observeAsState(AuthState.Initial)
+
                 val launcher =
                     rememberLauncherForActivityResult(getVKAuthActivityResultContract()) {
-                        Log.d("MainActivity", "Я вызвался: 1")
-                        when (it) {
-                            is VKAuthenticationResult.Success -> {
-                                Log.d("MainActivity", "Ok")
-                            }
+                        viewModel.performAuthResult(it)
+                    }
 
-                            is VKAuthenticationResult.Failed -> {
-                                Log.d("MainActivity", "Bad")
-                            }
+                when (authState.value) {
+                    AuthState.Authorized -> {
+                        MainScreen()
+                    }
+
+                    AuthState.NotAuthorized -> {
+                        LoginScreen {
+                            launcher.launch(listOf(VKScope.WALL))
                         }
                     }
 
-                LaunchedEffect(key1 = Unit) {
-                    Log.d("MainActivity", "Я вызвался: LaunchedEffect")
+                    AuthState.Initial -> {}
                 }
-
-                SideEffect {
-                    Log.d("MainActivity", "Я вызвался: SideEffect-composable")
-                }
-
-                ActivityResultTest()
             }
         }
     }
