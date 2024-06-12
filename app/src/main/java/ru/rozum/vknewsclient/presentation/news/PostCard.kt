@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import ru.rozum.vknewsclient.R
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.StatisticItem
@@ -62,12 +64,12 @@ fun PostCard(
             Text(text = feedPost.contentText)
             Spacer(modifier = Modifier.height(8.dp))
 
-            Image(
-                painter = painterResource(id = feedPost.contentResId),
+            AsyncImage(
+                model = feedPost.contentImageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .wrapContentHeight(),
                 contentScale = ContentScale.Crop
             )
 
@@ -88,8 +90,8 @@ private fun PostHeader(feedPost: FeedPost) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = feedPost.avatarResId),
+        AsyncImage(
+            model = feedPost.communityImageUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
