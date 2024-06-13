@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.StatisticItem
 import ru.rozum.vknewsclient.domain.StatisticType
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 data class NewsFeedResponseDto(
@@ -21,7 +24,7 @@ fun NewsFeedResponseDto.toPosts(): List<FeedPost> {
         val feedPost = FeedPost(
             id = post.id,
             communityName = group.name,
-            publicationDate = post.date.toString(),
+            publicationDate = post.date.toDate(),
             communityImageUrl = group.imageUri,
             contentText = post.text,
             contentImageUrl = post.attachments?.firstOrNull()?.photo?.photoUrlDto?.lastOrNull()?.url,
@@ -30,9 +33,13 @@ fun NewsFeedResponseDto.toPosts(): List<FeedPost> {
                 StatisticItem(type = StatisticType.VIEWS, post.views.count),
                 StatisticItem(type = StatisticType.SHARES, post.reposts.count),
                 StatisticItem(type = StatisticType.COMMENTS, post.comments.count)
-            )
+            ),
+            isFavourite = post.isFavourite
         )
         result.add(feedPost)
     }
     return result
 }
+
+private fun Long.toDate(): String =
+    SimpleDateFormat("d MMMM yyyy, hh:mm", Locale.getDefault()).format(Date(this * 1000))
