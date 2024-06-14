@@ -23,6 +23,7 @@ fun NewsFeedResponseDto.toPosts(): List<FeedPost> {
         val group = groups.find { it.id == post.communityId.absoluteValue } ?: continue
         val feedPost = FeedPost(
             id = post.id,
+            communityId = post.communityId,
             communityName = group.name,
             publicationDate = post.date.toDate(),
             communityImageUrl = group.imageUri,
@@ -34,7 +35,7 @@ fun NewsFeedResponseDto.toPosts(): List<FeedPost> {
                 StatisticItem(type = StatisticType.SHARES, post.reposts.count),
                 StatisticItem(type = StatisticType.COMMENTS, post.comments.count)
             ),
-            isFavourite = post.isFavourite
+            isLiked = post.likes.userLikes > 0
         )
         result.add(feedPost)
     }

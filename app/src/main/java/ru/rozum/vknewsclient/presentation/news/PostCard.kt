@@ -76,7 +76,7 @@ fun PostCard(
 
             Spacer(modifier = Modifier.height(8.dp))
             Statistics(
-                isFavourite = feedPost.isFavourite,
+                isFavourite = feedPost.isLiked,
                 statistics = feedPost.statistics,
                 onViewsClickListener = onViewsClickListener,
                 onShareClickListener = onShareClickListener,
@@ -168,11 +168,12 @@ private fun Statistics(
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconsWithText(
                 count = formatStatisticCount(likesItem.count),
-                iconResId = if(isFavourite) R.drawable.ic_like_set else R.drawable.ic_like,
+                iconResId = if (isFavourite) R.drawable.ic_like_set else R.drawable.ic_like,
                 onItemClickListener = {
                     onLikeClickListener(likesItem)
                 },
-                tint = if(isFavourite) DarkRed else MaterialTheme.colorScheme.onSecondary)
+                tint = if (isFavourite) DarkRed else MaterialTheme.colorScheme.onSecondary
+            )
         }
     }
 }
