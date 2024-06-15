@@ -21,11 +21,21 @@ class NewsFeedRepository(application: Application) {
 
     private val apiService = ApiFactory.apiService
     private var _feedPosts = mutableListOf<FeedPost>()
+    private var nextFrom: String? = null
+
     val feedPosts: List<FeedPost>
         get() = _feedPosts.toList()
 
     suspend fun loadRecommendations(): List<FeedPost> {
-        val response = apiService.loadRecommendations(accessToken)
+        val startFrom = nextFrom
+        if(startFrom == null && _feedPosts.isNotEmpty()) return feedPosts
+
+        val response = if(startFrom == null) {
+            apiService.loadRecommendations(accessToken)
+        } else {
+            apiService.loadRecommendations(accessToken, startFrom)
+        }
+        nextFrom = response.newsFeedContent.nextFrom
         _feedPosts.addAll(response.toPosts())
         return feedPosts
     }
