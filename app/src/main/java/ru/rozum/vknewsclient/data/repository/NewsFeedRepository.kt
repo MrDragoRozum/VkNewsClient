@@ -20,7 +20,7 @@ class NewsFeedRepository(application: Application) {
         }
 
     private val apiService = ApiFactory.apiService
-    private var _feedPosts = mutableListOf<FeedPost>()
+    private val _feedPosts = mutableListOf<FeedPost>()
     private var nextFrom: String? = null
 
     val feedPosts: List<FeedPost>
@@ -28,9 +28,9 @@ class NewsFeedRepository(application: Application) {
 
     suspend fun loadRecommendations(): List<FeedPost> {
         val startFrom = nextFrom
-        if(startFrom == null && _feedPosts.isNotEmpty()) return feedPosts
+        if (startFrom == null && _feedPosts.isNotEmpty()) return feedPosts
 
-        val response = if(startFrom == null) {
+        val response = if (startFrom == null) {
             apiService.loadRecommendations(accessToken)
         } else {
             apiService.loadRecommendations(accessToken, startFrom)
@@ -69,4 +69,12 @@ class NewsFeedRepository(application: Application) {
         _feedPosts[postIndex] = updatedFeedPost
     }
 
+    suspend fun deletePost(feedPost: FeedPost) {
+        apiService.ignorePost(
+            token = accessToken,
+            ownerId = feedPost.communityId,
+            itemId = feedPost.id
+        )
+        _feedPosts.remove(feedPost)
+    }
 }

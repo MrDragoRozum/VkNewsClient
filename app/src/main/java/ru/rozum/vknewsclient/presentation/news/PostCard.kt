@@ -40,8 +40,6 @@ import ru.rozum.vknewsclient.ui.theme.DarkRed
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
     onLikeClickListener: (StatisticItem) -> Unit,
 ) {
@@ -78,8 +76,6 @@ fun PostCard(
             Statistics(
                 isFavourite = feedPost.isLiked,
                 statistics = feedPost.statistics,
-                onViewsClickListener = onViewsClickListener,
-                onShareClickListener = onShareClickListener,
                 onCommentClickListener = onCommentClickListener,
                 onLikeClickListener = onLikeClickListener
             )
@@ -126,8 +122,6 @@ private fun PostHeader(feedPost: FeedPost) {
 @Composable
 private fun Statistics(
     statistics: List<StatisticItem>,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
     onLikeClickListener: (StatisticItem) -> Unit,
     isFavourite: Boolean,
@@ -139,10 +133,8 @@ private fun Statistics(
             val viewsItem = statistics.getItemByType(StatisticType.VIEWS)
             IconsWithText(
                 count = formatStatisticCount(viewsItem.count),
-                iconResId = R.drawable.ic_views_count,
-                onItemClickListener = {
-                    onViewsClickListener(viewsItem)
-                })
+                iconResId = R.drawable.ic_views_count
+            )
         }
 
         Row(
@@ -152,10 +144,8 @@ private fun Statistics(
             val sharesItem = statistics.getItemByType(StatisticType.SHARES)
             IconsWithText(
                 count = formatStatisticCount(sharesItem.count),
-                iconResId = R.drawable.ic_share,
-                onItemClickListener = {
-                    onShareClickListener(sharesItem)
-                })
+                iconResId = R.drawable.ic_share
+            )
 
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
             IconsWithText(
@@ -191,13 +181,18 @@ private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticIte
 private fun IconsWithText(
     count: String,
     iconResId: Int,
-    onItemClickListener: () -> Unit,
+    onItemClickListener: (() -> Unit)? = null,
     tint: Color = MaterialTheme.colorScheme.onSecondary
 ) {
-    Row(
-        modifier = Modifier.clickable {
+    val modifier = if (onItemClickListener == null) {
+        Modifier
+    } else {
+        Modifier.clickable {
             onItemClickListener()
-        },
+        }
+    }
+    Row(
+        modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
