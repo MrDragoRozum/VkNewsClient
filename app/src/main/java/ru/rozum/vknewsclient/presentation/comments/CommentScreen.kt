@@ -1,6 +1,6 @@
 package ru.rozum.vknewsclient.presentation.comments
 
-import androidx.compose.foundation.Image
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,10 +29,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import ru.rozum.vknewsclient.R
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.PostComment
 
@@ -43,8 +46,10 @@ fun CommentScreen(
     feedPost: FeedPost,
     onBackPressed: () -> Unit
 ) {
+
+    val context = LocalContext.current.applicationContext as Application
     val viewModel: CommentsViewModel = viewModel() {
-        CommentsViewModel(feedPost)
+        CommentsViewModel(feedPost, context)
     }
 
     val state = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
@@ -58,7 +63,7 @@ fun CommentScreen(
                     modifier = Modifier.shadow(elevation = 3.dp),
                     title = {
                         Text(
-                            text = "Comments for FeedPost Id:${currentState.feedPost.id}",
+                            text = stringResource(R.string.comments_title),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 18.sp
                         )
@@ -91,18 +96,18 @@ fun CommentItem(postComment: PostComment) {
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        Image(
+        AsyncImage(
             modifier = Modifier
-                .size(25.dp)
+                .size(48.dp)
                 .clip(CircleShape),
-            painter = painterResource(id = postComment.authorAvatarId),
+            model = postComment.authorAvatarUrl,
             contentDescription = null
         )
 
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = "${postComment.authorName} Comment Id: ${postComment.id}",
+                text = postComment.authorName,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )

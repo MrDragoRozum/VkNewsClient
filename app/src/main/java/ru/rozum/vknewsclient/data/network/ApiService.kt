@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.rozum.vknewsclient.data.model.LikesCountResponseDto
 import ru.rozum.vknewsclient.data.model.NewsFeedResponseDto
+import ru.rozum.vknewsclient.data.model.ResponseCommentsDto
 
 interface ApiService {
 
@@ -36,4 +37,11 @@ interface ApiService {
         @Query("item_id") itemId: Long,
         @Query("owner_id") ownerId: Long
     )
+
+    @GET("wall.getComments?v=5.1999&fields=photo_100,first_name,last_name&extended=1")
+    suspend fun loadComments(
+        @Query("access_token") token: String,
+        @Query("post_id") postId: Long,
+        @Query("owner_id") ownerId: Long
+    ): ResponseCommentsDto
 }

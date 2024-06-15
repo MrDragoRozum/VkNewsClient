@@ -3,9 +3,11 @@ package ru.rozum.vknewsclient.data.repository
 import android.app.Application
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
+import ru.rozum.vknewsclient.data.model.toPostComments
 import ru.rozum.vknewsclient.data.model.toPosts
 import ru.rozum.vknewsclient.data.network.ApiFactory
 import ru.rozum.vknewsclient.domain.FeedPost
+import ru.rozum.vknewsclient.domain.PostComment
 import ru.rozum.vknewsclient.domain.StatisticItem
 import ru.rozum.vknewsclient.domain.StatisticType
 
@@ -76,5 +78,15 @@ class NewsFeedRepository(application: Application) {
             itemId = feedPost.id
         )
         _feedPosts.remove(feedPost)
+    }
+
+    suspend fun loadComments(feedPost: FeedPost): List<PostComment> {
+        val response = apiService.loadComments(
+            token = accessToken,
+            postId = feedPost.id,
+            ownerId = feedPost.communityId
+        )
+
+        return response.toPostComments()
     }
 }
