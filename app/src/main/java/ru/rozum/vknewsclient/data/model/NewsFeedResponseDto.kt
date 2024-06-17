@@ -1,9 +1,9 @@
 package ru.rozum.vknewsclient.data.model
 
 import com.google.gson.annotations.SerializedName
-import ru.rozum.vknewsclient.domain.FeedPost
-import ru.rozum.vknewsclient.domain.StatisticItem
-import ru.rozum.vknewsclient.domain.StatisticType
+import ru.rozum.vknewsclient.domain.entity.FeedPost
+import ru.rozum.vknewsclient.domain.entity.StatisticItem
+import ru.rozum.vknewsclient.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

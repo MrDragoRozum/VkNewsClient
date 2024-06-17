@@ -1,4 +1,4 @@
-package ru.rozum.vknewsclient.domain
+package ru.rozum.vknewsclient.domain.entity
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

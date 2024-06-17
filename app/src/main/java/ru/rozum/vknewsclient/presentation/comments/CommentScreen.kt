@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import ru.rozum.vknewsclient.R
-import ru.rozum.vknewsclient.domain.FeedPost
-import ru.rozum.vknewsclient.domain.PostComment
+import ru.rozum.vknewsclient.domain.entity.FeedPost
+import ru.rozum.vknewsclient.domain.entity.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

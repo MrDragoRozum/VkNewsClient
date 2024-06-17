@@ -1,7 +1,7 @@
 package ru.rozum.vknewsclient.data.model
 
 import com.google.gson.annotations.SerializedName
-import ru.rozum.vknewsclient.domain.PostComment
+import ru.rozum.vknewsclient.domain.entity.PostComment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

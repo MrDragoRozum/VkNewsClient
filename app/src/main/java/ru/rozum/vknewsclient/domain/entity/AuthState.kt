@@ -1,4 +1,4 @@
-package ru.rozum.vknewsclient.domain
+package ru.rozum.vknewsclient.domain.entity
 
 sealed class AuthState {
     data object Initial : AuthState()

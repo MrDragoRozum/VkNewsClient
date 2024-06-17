@@ -1,6 +1,6 @@
 package ru.rozum.vknewsclient.presentation.news
 
-import ru.rozum.vknewsclient.domain.FeedPost
+import ru.rozum.vknewsclient.domain.entity.FeedPost
 
 sealed class NewsFeedScreenState {
     data object Initial : NewsFeedScreenState()

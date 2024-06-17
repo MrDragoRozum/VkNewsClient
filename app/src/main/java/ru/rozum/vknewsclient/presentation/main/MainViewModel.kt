@@ -1,31 +1,24 @@
 package ru.rozum.vknewsclient.presentation.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
-import com.vk.api.sdk.auth.VKAuthenticationResult
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import ru.rozum.vknewsclient.data.repository.NewsFeedRepository
-import ru.rozum.vknewsclient.domain.AuthState
-import ru.rozum.vknewsclient.extensions.mergeWith
+import ru.rozum.vknewsclient.data.repository.NewsFeedRepositoryImpl
+import ru.rozum.vknewsclient.domain.ucecases.CheckAuthStateUseCase
+import ru.rozum.vknewsclient.domain.ucecases.GetAuthStateFlowUseCase
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = NewsFeedRepository(application)
+    private val repository = NewsFeedRepositoryImpl(application)
+    private val getAuthStateFlowUseCase = GetAuthStateFlowUseCase(repository)
+    private val checkAuthStateUseCase = CheckAuthStateUseCase(repository)
 
-    val authState = repository.authState
+    val authState = getAuthStateFlowUseCase()
 
     fun performAuthResult() {
         viewModelScope.launch {
-            repository.checkAuthState()
+            checkAuthStateUseCase()
         }
     }
 }

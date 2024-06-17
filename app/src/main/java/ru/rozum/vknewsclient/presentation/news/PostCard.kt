@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.rozum.vknewsclient.R
-import ru.rozum.vknewsclient.domain.FeedPost
-import ru.rozum.vknewsclient.domain.StatisticItem
-import ru.rozum.vknewsclient.domain.StatisticType
+import ru.rozum.vknewsclient.domain.entity.FeedPost
+import ru.rozum.vknewsclient.domain.entity.StatisticItem
+import ru.rozum.vknewsclient.domain.entity.StatisticType
 import ru.rozum.vknewsclient.ui.theme.DarkRed
 
 @Composable
