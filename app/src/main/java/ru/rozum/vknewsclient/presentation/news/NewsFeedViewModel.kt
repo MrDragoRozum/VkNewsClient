@@ -3,16 +3,12 @@ package ru.rozum.vknewsclient.presentation.news
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import ru.rozum.vknewsclient.data.repository.NewsFeedRepository
@@ -24,6 +20,10 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private val repository = NewsFeedRepository(application)
 
     private val recommendationsFlow = repository.recommendations
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
+        Log.d("NewsFeedViewModel", "Было поймано исключение")
+    }
 
     private val loadNextDataEvents = MutableSharedFlow<Unit>()
     private val loadNextDataFlow = flow {
@@ -53,14 +53,14 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun remove(feedPost: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.deletePost(feedPost)
 
         }
     }
 
     fun changeLikeStatus(feedPost: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.changeLikeStatus(feedPost)
         }
     }

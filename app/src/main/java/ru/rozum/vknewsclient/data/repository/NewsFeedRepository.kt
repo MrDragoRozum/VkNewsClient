@@ -6,14 +6,14 @@ import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import ru.rozum.vknewsclient.data.model.toPostComments
 import ru.rozum.vknewsclient.data.model.toPosts
 import ru.rozum.vknewsclient.data.network.ApiFactory
@@ -30,6 +30,16 @@ class NewsFeedRepository(application: Application) {
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     private val refreshedListFlow = MutableSharedFlow<List<FeedPost>>()
+    private val accessToken: String
+        get() {
+            return token?.accessToken ?: throw IllegalArgumentException("Token is null")
+        }
+    private val apiService = ApiFactory.apiService
+    private val _feedPosts = mutableListOf<FeedPost>()
+    private var nextFrom: String? = null
+    private val feedPosts: List<FeedPost>
+        get() = _feedPosts.toList()
+
     private val loadedListFlow = flow {
         nextDataNeededEvents.emit(Unit)
         nextDataNeededEvents.collect {
@@ -47,19 +57,23 @@ class NewsFeedRepository(application: Application) {
             _feedPosts.addAll(response.toPosts())
             emit(feedPosts)
         }
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
     }
 
-    private val accessToken: String
-        get() {
-            return token?.accessToken ?: throw IllegalArgumentException("Token is null")
-        }
-
-    private val apiService = ApiFactory.apiService
-    private val _feedPosts = mutableListOf<FeedPost>()
-    private var nextFrom: String? = null
-
-    private val feedPosts: List<FeedPost>
-        get() = _feedPosts.toList()
+    fun getComments(feedPost: FeedPost): Flow<List<PostComment>> = flow {
+        val response = apiService.loadComments(
+            token = accessToken,
+            postId = feedPost.id,
+            ownerId = feedPost.communityId
+        )
+        Log.d("NewsFeedRepository", "я в flow")
+        emit(response.toPostComments())
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
+    }
 
     val recommendations: StateFlow<List<FeedPost>> = loadedListFlow
         .mergeWith(refreshedListFlow)
@@ -69,11 +83,8 @@ class NewsFeedRepository(application: Application) {
             initialValue = feedPosts
         )
 
-    suspend fun loadNextRecommendations() {
-        Log.d("NewsFeedRepository", "Я вызвался в loadNextRecommendations")
+    suspend fun loadNextRecommendations() = nextDataNeededEvents.emit(Unit)
 
-        nextDataNeededEvents.emit(Unit)
-    }
 
     suspend fun changeLikeStatus(feedPost: FeedPost) {
         val response = if (feedPost.isLiked) {
@@ -115,13 +126,7 @@ class NewsFeedRepository(application: Application) {
         refreshedListFlow.emit(feedPosts)
     }
 
-    suspend fun loadComments(feedPost: FeedPost): List<PostComment> {
-        val response = apiService.loadComments(
-            token = accessToken,
-            postId = feedPost.id,
-            ownerId = feedPost.communityId
-        )
-
-        return response.toPostComments()
+    companion object {
+        private const val RETRY_TIMEOUT_MILLIS = 3_000L
     }
 }
