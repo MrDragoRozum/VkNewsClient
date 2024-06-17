@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.rozum.vknewsclient.data.model.toPostComments
 import ru.rozum.vknewsclient.data.model.toPosts
 import ru.rozum.vknewsclient.data.network.ApiFactory
+import ru.rozum.vknewsclient.domain.AuthState
 import ru.rozum.vknewsclient.domain.FeedPost
 import ru.rozum.vknewsclient.domain.PostComment
 import ru.rozum.vknewsclient.domain.StatisticItem
@@ -26,10 +27,11 @@ import ru.rozum.vknewsclient.extensions.mergeWith
 class NewsFeedRepository(application: Application) {
 
     private val storage = VKPreferencesKeyValueStorage(application)
-    private val token = VKAccessToken.restore(storage)
+    private val token get() = VKAccessToken.restore(storage)
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     private val refreshedListFlow = MutableSharedFlow<List<FeedPost>>()
+    private val checkAuthStateEvents = MutableSharedFlow<Unit>(replay = 1)
     private val accessToken: String
         get() {
             return token?.accessToken ?: throw IllegalArgumentException("Token is null")
@@ -62,13 +64,31 @@ class NewsFeedRepository(application: Application) {
         true
     }
 
+    val authState: StateFlow<AuthState> = flow {
+        checkAuthStateEvents.emit(Unit)
+        checkAuthStateEvents.collect {
+            val currentToken = token
+            val loggedIn =  currentToken != null && currentToken.isValid
+            val currentState = if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized
+            emit(currentState)
+        }
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = AuthState.Initial
+    )
+
+    suspend fun checkAuthState() = checkAuthStateEvents.emit(Unit)
+
     fun getComments(feedPost: FeedPost): Flow<List<PostComment>> = flow {
         val response = apiService.loadComments(
             token = accessToken,
             postId = feedPost.id,
             ownerId = feedPost.communityId
         )
-        Log.d("NewsFeedRepository", "я в flow")
         emit(response.toPostComments())
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
