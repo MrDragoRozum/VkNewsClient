@@ -17,26 +17,41 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.rozum.vknewsclient.ui.theme.DarkBlue
 import ru.rozum.vknewsclient.domain.entity.FeedPost
-import ru.rozum.vknewsclient.presentation.ViewModelFactory
+import ru.rozum.vknewsclient.presentation.applicationComponent
+import ru.rozum.vknewsclient.ui.theme.DarkBlue
 
 @Composable
 fun NewsFeedScreen(
     paddingValues: PaddingValues,
-    onCommentClickListener: (FeedPost) -> Unit,
-    viewModelFactory: ViewModelFactory
+    onCommentClickListener: (FeedPost) -> Unit
 ) {
-
-    val viewModel: NewsFeedViewModel = viewModel(factory = viewModelFactory)
+    val viewModel: NewsFeedViewModel =
+        viewModel(factory = applicationComponent.getViewModelFactory())
 
     val screenState = viewModel.stateScreen.collectAsState(NewsFeedScreenState.Initial)
 
+    NewsFeedScreenContent(
+        screenState = screenState,
+        paddingValues = paddingValues,
+        viewModel = viewModel,
+        onCommentClickListener = onCommentClickListener
+    )
+}
+
+@Composable
+private fun NewsFeedScreenContent(
+    screenState: State<NewsFeedScreenState>,
+    paddingValues: PaddingValues,
+    viewModel: NewsFeedViewModel,
+    onCommentClickListener: (FeedPost) -> Unit
+) {
     when (val currentState = screenState.value) {
 
         is NewsFeedScreenState.Posts -> FeedPosts(
@@ -76,7 +91,7 @@ private fun FeedPosts(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        itemsIndexed(items = posts, key = { _, item -> item.id }) { index, feedPost ->
+        itemsIndexed(items = posts, key = { _, item -> item.id }) { _, feedPost ->
             val dismissState = rememberDismissState()
 
 
