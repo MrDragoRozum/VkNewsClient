@@ -82,7 +82,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             },
             commentsScreenContent = { feedPost ->
                 CommentScreen(
-                    viewModelFactory = viewModelFactory,
                     modifier = Modifier.padding(paddingValues),
                     feedPost = feedPost,
                     onBackPressed = {

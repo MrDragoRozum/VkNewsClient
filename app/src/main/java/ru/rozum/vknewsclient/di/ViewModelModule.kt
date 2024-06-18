@@ -16,11 +16,6 @@ interface ViewModelModule {
     @IntoMap
     fun bindNewsFeedViewModel(viewModel: NewsFeedViewModel): ViewModel
 
-    @ViewModelKey(viewModel = CommentsViewModel::class)
-    @Binds
-    @IntoMap
-    fun bindCommentsViewModel(viewModel: CommentsViewModel): ViewModel
-
     @ViewModelKey(viewModel = MainViewModel::class)
     @Binds
     @IntoMap
