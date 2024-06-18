@@ -1,19 +1,15 @@
 package ru.rozum.vknewsclient.presentation.comments
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.map
-import ru.rozum.vknewsclient.data.repository.NewsFeedRepositoryImpl
 import ru.rozum.vknewsclient.domain.entity.FeedPost
 import ru.rozum.vknewsclient.domain.ucecases.GetCommentsUseCase
+import javax.inject.Inject
 
-class CommentsViewModel(
-    feedPost: FeedPost,
-    application: Application
-) : AndroidViewModel(application) {
-
-    private val repository = NewsFeedRepositoryImpl(application)
-    private val getCommentsScreenState = GetCommentsUseCase(repository)
+class CommentsViewModel @Inject constructor(
+    private val feedPost: FeedPost,
+    getCommentsScreenState: GetCommentsUseCase
+) : ViewModel() {
 
     val screenState =
         getCommentsScreenState(feedPost).map {

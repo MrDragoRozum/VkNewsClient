@@ -1,6 +1,5 @@
 package ru.rozum.vknewsclient.data.repository
 
-import android.app.Application
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 import ru.rozum.vknewsclient.data.model.toPostComments
 import ru.rozum.vknewsclient.data.model.toPosts
-import ru.rozum.vknewsclient.data.network.ApiFactory
+import ru.rozum.vknewsclient.data.network.ApiService
 import ru.rozum.vknewsclient.domain.entity.AuthState
 import ru.rozum.vknewsclient.domain.entity.FeedPost
 import ru.rozum.vknewsclient.domain.entity.PostComment
@@ -22,10 +21,13 @@ import ru.rozum.vknewsclient.domain.entity.StatisticItem
 import ru.rozum.vknewsclient.domain.entity.StatisticType
 import ru.rozum.vknewsclient.domain.repository.NewsFeedRepository
 import ru.rozum.vknewsclient.extensions.mergeWith
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
+class NewsFeedRepositoryImpl @Inject constructor(
+    private val storage: VKPreferencesKeyValueStorage,
+    private val apiService: ApiService
+) : NewsFeedRepository {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token get() = VKAccessToken.restore(storage)
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
@@ -35,7 +37,7 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         get() {
             return token?.accessToken ?: throw IllegalArgumentException("Token is null")
         }
-    private val apiService = ApiFactory.apiService
+
     private val _feedPosts = mutableListOf<FeedPost>()
     private var nextFrom: String? = null
     private val feedPosts: List<FeedPost>

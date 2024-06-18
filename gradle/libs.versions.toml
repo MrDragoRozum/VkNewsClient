@@ -4,6 +4,8 @@ androidSdkCore = "4.1.0"
 androidSdkApi = "4.1.0"
 coilCompose = "2.6.0"
 converterGson = "2.11.0"
+dagger = "2.51.1"
+daggerCompiler = "2.51.1"
 gson = "2.11.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -27,6 +29,8 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

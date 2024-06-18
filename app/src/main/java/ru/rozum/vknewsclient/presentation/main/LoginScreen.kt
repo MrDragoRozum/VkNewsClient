@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sumin.vknewsclient.ui.theme.DarkBlue
+import ru.rozum.vknewsclient.ui.theme.DarkBlue
 import ru.rozum.vknewsclient.R
 
 @Composable

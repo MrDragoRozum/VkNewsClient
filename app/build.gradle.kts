@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -53,6 +54,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
     implementation(libs.android.sdk.core)
