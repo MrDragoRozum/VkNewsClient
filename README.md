@@ -10,5 +10,6 @@ Jetpack Compose, Jetpack Compose Navigation, MVVM, Flow, VK SDK, Coil (Compose),
 Внешность
 -
 
-| Авторизация | Список проектов | Детальная информация проекта |
+| Авторизация | Лента | Комментарии под постом |
 |:-:|:-:|:-:|
+|![alt text](images/Screenshot_3.jpg)|![alt text](images/Screenshot_1.jpg)|![alt text](images/Screenshot_2.jpg)|
